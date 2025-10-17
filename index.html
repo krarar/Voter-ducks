@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1a3a3a">
+    <meta name="description" content="تطبيق بطاقة الانتماء العراقي - الأساس العراق">
+    <title>الأساس العراق - بطاقة الانتماء</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a3a3a;
+            --secondary-color: #ce1126;
+            --accent-color: #ffd700;
+            --light-bg: #f0f2f5;
+            --dark-text: #1a1a1a;
+            --border-color: #e0e0e0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 16px;
+        }
+
+        html, body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #f8f9fa 100%);
+            color: var(--dark-text);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2d5a5a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-screen p {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Screens Container */
+        .screens-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--light-bg);
+            z-index: 100;
+            overflow: hidden;
+            animation: slideIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Login Screen */
+        .login-screen {
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .app-logo {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+            font-size: 45px;
+            color: var(--accent-color);
+            box-shadow: var(--shadow);
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        /* Forms */
+        .login-form {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: white;
+            color: var(--dark-text);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(26, 58, 58, 0.1);
+            background-color: #fafafa;
+        }
+
+        .form-group input::placeholder {
+            color: #bbb;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #2d5a5a);
+            color: white;
+            width: 100%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ffc700;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 16px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-header {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px;
+        }
+
+        .btn-header:hover {
+            color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #999;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider::before {
+            right: 0;
+        }
+
+        .divider::after {
+            left: 0;
+        }
+
+        /* Create Card Screen */
+        .create-card-screen {
+            overflow-y: auto;
+            padding-bottom: 30px;
+        }
+
+        .screen-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .screen-header h1 {
+            flex: 1;
+            font-size: 22px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .create-form {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border-right: 4px solid var(--accent-color);
+        }
+
+        .form-section h2 {
+            font-size: 16px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 520px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Photo Upload */
+        .photo-upload {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-upload input {
+            display: none;
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 280px;
+            border: 3px dashed var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, rgba(26, 58, 58, 0.02), rgba(206, 17, 38, 0.02));
+        }
+
+        .photo-preview:hover {
+            border-color: var(--secondary-color);
+            background: linear-gradient(135deg, rgba(26, 58, 58, 0.08), rgba(206, 17, 38, 0.08));
+            transform: scale(1.02);
+        }
+
+        .photo-preview i {
+            font-size: 50px;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .photo-preview p {
+            color: var(--primary-color);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /* Card Screen */
+        .card-screen {
+            justify-content: flex-start;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .card-header h1 {
+            flex: 1;
+            font-size: 24px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Card Flip */
+        .card-flip-container {
+            perspective: 1200px;
+            width: 100%;
+            height: 350px;
+            margin: 30px 0;
+            cursor: pointer;
+            margin-bottom: 40px;
+        }
+
+        .card-flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-style: preserve-3d;
+        }
+
+        .card-flip-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Card Front */
+        .card-front {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f6f1 100%);
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header-section {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .card-content {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+            align-items: flex-start;
+        }
+
+        .card-photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .card-photo {
+            width: 100px;
+            height: 130px;
+            border: 3px solid var(--accent-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fff, #ffe680);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .card-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-photo-placeholder {
+            font-size: 40px;
+            color: #ddd;
+        }
+
+        .card-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 8px;
+            align-content: start;
+        }
+
+        .card-info-item {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+            align-items: center;
+        }
+
+        .card-info-label {
+            font-weight: 700;
+            color: var(--primary-color);
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+
+        .card-info-value {
+            color: #b8860b;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .card-footer {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px dashed var(--accent-color);
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Card Back */
+        .card-back {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2d5a5a 100%);
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: rotateY(180deg);
+        }
+
+        .back-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .back-content h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .qr-code-container {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        .qr-code-container canvas {
+            display: block;
+            width: 150px;
+            height: 150px;
+        }
+
+        .verification-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .verification-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .verification-code {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+            background: white;
+            color: var(--primary-color);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .card-flip-hint {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 15px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Card Actions */
+        .card-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 520px) {
+            .card-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .card-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card-info {
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            max-width: 400px;
+            padding: 16px 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 2000;
+            animation: slideInUp 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 520px) {
+            .toast {
+                right: 15px;
+                left: 15px;
+                bottom: 20px;
+            }
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.error {
+            background: #e74c3c;
+        }
+
+        .toast.success {
+            background: #27ae60;
+        }
+
+        .toast.warning {
+            background: #f39c12;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1999;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            animation: zoomIn 0.3s ease;
+            width: 100%;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .card-flip-container {
+                height: 320px;
+            }
+
+            .card-front,
+            .card-back {
+                padding: 20px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .form-section {
+                padding: 16px;
+            }
+
+            .screen-header {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+            opacity: 0.5;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            opacity: 0.7;
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="spinner"></div>
+        <p>جاري التحميل...</p>
+    </div>
+
+    <!-- Screens Container -->
+    <div class="screens-container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen login-screen active">
+            <div class="login-container">
+                <div class="login-header">
+                    <div class="app-logo">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h1>الأساس العراق</h1>
+                    <p>بطاقة الانتماء الوطنية</p>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="fullName">الاسم الثلاثي</label>
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            placeholder="أدخل اسمك الثلاثي"
+                            required
+                        >
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="membershipNumber">رقم الانتماء (8 أرقام)</label>
+                        <input 
+                            type="number" 
+                            id="membershipNumber" 
+                            placeholder="00000000"
+                            maxlength="8"
+                            required
+                        >
+                        <span class="error-message"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-sign-in-alt"></i> دخول
+                    </button>
+                </form>
+
+                <div class="divider">أو</div>
+
+                <button id="createCardBtn" class="btn btn-secondary btn-large">
+                    <i class="fas fa-plus"></i> إنشاء بطاقة جديدة
+                </button>
+            </div>
+        </div>
+
+        <!-- Create Card Screen -->
+        <div id="createCardScreen" class="screen create-card-screen">
+            <div class="screen-header">
+                <button class="btn-header" id="backFromCreate">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <h1>إنشاء بطاقة انتماء</h1>
+            </div>
+
+            <form id="createCardForm" class="create-form">
+                <div class="form-section">
+                    <h2><i class="fas fa-user"></i> البيانات الشخصية</h2>
+                    
+                    <div class="form-group">
+                        <label for="createFullName">الاسم الثلاثي</label>
+                        <input type="text" id="createFullName" placeholder="أدخل اسمك الثلاثي" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="createMembershipNumber">رقم الانتماء (8 أرقام)</label>
+                            <input type="number" id="createMembershipNumber" placeholder="00000000" maxlength="8" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="createFamilyNumber">رقم العائلة</label>
+                            <input type="number" id="createFamilyNumber" placeholder="أدخل رقم العائلة" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="createBirthYear">سنة الميلاد</label>
+                            <input type="number" id="createBirthYear" min="1900" max="2024" placeholder="2000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="createGender">النوع</label>
+                            <select id="createGender" required>
+                                <option value="">اختر</option>
+                                <option value="ذكر">ذكر</option>
+                                <option value="أنثى">أنثى</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-map-marker-alt"></i> معلومات المركز والمحافظة</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="createProvince">المحافظة</label>
+                            <input type="text" id="createProvince" placeholder="أدخل المحافظة" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="createCenterNumber">رقم مركز التسجيل</label>
+                            <input type="number" id="createCenterNumber" placeholder="رقم المركز" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="createCenterName">اسم المركز</label>
+                        <input type="text" id="createCenterName" placeholder="أدخل اسم المركز" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="createStationNumber">رقم المحطة</label>
+                        <input type="number" id="createStationNumber" placeholder="أدخل رقم المحطة" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-camera"></i> الصورة الشخصية</h2>
+                    <div class="photo-upload">
+                        <input type="file" id="photoInput" accept="image/*" required>
+                        <div id="photoPreview" class="photo-preview">
+                            <i class="fas fa-camera"></i>
+                            <p>انقر لاختيار صورة</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    <i class="fas fa-check"></i> إنشاء البطاقة
+                </button>
+            </form>
+        </div>
+
+        <!-- Card Display Screen -->
+        <div id="cardScreen" class="screen">
+            <div class="screen-header">
+                <button class="btn-header" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+                <h1>بطاقتك</h1>
+                <button class="btn-header" id="editCardBtn">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+
+            <div class="card-container">
+                <!-- Card Flip -->
+                <div class="card-flip-container" id="cardFlip">
+                    <div class="card-flip-inner">
+                        <!-- Front of Card -->
+                        <div class="card-front">
+                            <div class="card-header-section">
+                                <p class="card-title">الأساس العراق</p>
+                                <p class="card-subtitle">بطاقة الانتماء الوطنية</p>
+                            </div>
+
+                            <div class="card-content">
+                                <div class="card-photo-section">
+                                    <div class="card-photo" id="cardPhotoContainer">
+                                        <img id="cardPhotoImg" src="" alt="الصورة الشخصية">
+                                    </div>
+                                </div>
+
+                                <div class="card-info">
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">الاسم:</span>
+                                        <span class="card-info-value" id="cardFullNameDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">الانتماء:</span>
+                                        <span class="card-info-value" id="cardMembershipDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">المحافظة:</span>
+                                        <span class="card-info-value" id="cardProvinceDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">الميلاد:</span>
+                                        <span class="card-info-value" id="cardBirthYearDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">النوع:</span>
+                                        <span class="card-info-value" id="cardGenderDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">العائلة:</span>
+                                        <span class="card-info-value" id="cardFamilyNumDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">المركز:</span>
+                                        <span class="card-info-value" id="cardCenterNameDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">رقم التسجيل:</span>
+                                        <span class="card-info-value" id="cardCenterNumDisplay"></span>
+                                    </div>
+                                    <div class="card-info-item">
+                                        <span class="card-info-label">المحطة:</span>
+                                        <span class="card-info-value" id="cardStationNumDisplay"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer">
+                                منصة الأساس العراق © 2024
+                            </div>
+                        </div>
+
+                        <!-- Back of Card -->
+                        <div class="card-back">
+                            <div class="back-content">
+                                <h3>رمز التحقق الديجيتالي</h3>
+                                <div class="qr-code-container" id="qrCodeContainer"></div>
+                                
+                                <div class="verification-section">
+                                    <p class="verification-label">رقم التحقق الفريد:</p>
+                                    <div class="verification-code" id="verificationCodeDisplay"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-flip-hint">
+                    <i class="fas fa-sync-alt"></i> انقر على البطاقة لقلبها
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-actions">
+                    <button class="btn btn-secondary" id="downloadCardBtn">
+                        <i class="fas fa-download"></i> تحميل
+                    </button>
+                    <button class="btn btn-secondary" id="shareCardBtn">
+                        <i class="fas fa-share-alt"></i> مشاركة
+                    </button>
+                    <button class="btn btn-danger" id="deleteCardBtn">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">تأكيد</h2>
+            <p id="modalMessage"></p>
+            <div class="modal-actions">
+                <button id="confirmYes" class="btn btn-primary">نعم</button>
+                <button id="confirmNo" class="btn btn-secondary">لا</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== App Configuration ====================
+        const APP_CONFIG = {
+            storageKey: 'iraqCardData',
+            cardStorageKey: 'iraqCardInfo'
+        };
+
+        // ==================== DOM Elements ====================
+        const elements = {
+            // Screens
+            loadingScreen: document.getElementById('loadingScreen'),
+            loginScreen: document.getElementById('loginScreen'),
+            createCardScreen: document.getElementById('createCardScreen'),
+            cardScreen: document.getElementById('cardScreen'),
+
+            // Forms
+            loginForm: document.getElementById('loginForm'),
+            createCardForm: document.getElementById('createCardForm'),
+            photoInput: document.getElementById('photoInput'),
+            photoPreview: document.getElementById('photoPreview'),
+
+            // Card Display
+            cardFlip: document.getElementById('cardFlip'),
+            cardPhotoImg: document.getElementById('cardPhotoImg'),
+            qrCodeContainer: document.getElementById('qrCodeContainer'),
+
+            // Buttons
+            createCardBtn: document.getElementById('createCardBtn'),
+            backFromCreate: document.getElementById('backFromCreate'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            editCardBtn: document.getElementById('editCardBtn'),
+            downloadCardBtn: document.getElementById('downloadCardBtn'),
+            shareCardBtn: document.getElementById('shareCardBtn'),
+            deleteCardBtn: document.getElementById('deleteCardBtn'),
+
+            // Toast & Modal
+            toast: document.getElementById('toast'),
+            confirmModal: document.getElementById('confirmModal'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalMessage: document.getElementById('modalMessage'),
+            confirmYes: document.getElementById('confirmYes'),
+            confirmNo: document.getElementById('confirmNo')
+        };
+
+        // ==================== State Management ====================
+        let appState = {
+            currentUser: null,
+            cardData: null,
+            photoData: null
+        };
+
+        // ==================== Initialization ====================
+        function initApp() {
+            console.log('========== App Initialization Started ==========');
+            try {
+                setupEventListeners();
+                console.log('✓ Event listeners attached');
+                
+                loadUserData();
+                console.log('✓ User data loaded');
+                
+                hideLoading();
+                console.log('✓ Loading screen hidden');
+                
+                console.log('========== App Ready! ==========');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                hideLoading();
+                showToast('خطأ في تهيئة التطبيق', 'error');
+            }
+        }
+
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            try {
+                // Login Form
+                if (elements.loginForm) {
+                    elements.loginForm.addEventListener('submit', handleLoginSubmit);
+                    console.log('✓ Login form listener added');
+                }
+                
+                if (elements.createCardBtn) {
+                    elements.createCardBtn.addEventListener('click', showCreateCardScreen);
+                    console.log('✓ Create card button listener added');
+                }
+                
+                if (elements.backFromCreate) {
+                    elements.backFromCreate.addEventListener('click', showLoginScreen);
+                    console.log('✓ Back button listener added');
+                }
+
+                // Create Card Form
+                if (elements.createCardForm) {
+                    elements.createCardForm.addEventListener('submit', handleCreateCard);
+                    console.log('✓ Create card form listener added');
+                }
+                
+                if (elements.photoInput) {
+                    elements.photoInput.addEventListener('change', handlePhotoSelect);
+                    console.log('✓ Photo input listener added');
+                }
+
+                // Card Screen
+                if (elements.cardFlip && elements.cardFlip.parentElement) {
+                    elements.cardFlip.parentElement.addEventListener('click', toggleCardFlip);
+                    console.log('✓ Card flip listener added');
+                }
+                
+                if (elements.logoutBtn) {
+                    elements.logoutBtn.addEventListener('click', handleLogout);
+                    console.log('✓ Logout button listener added');
+                }
+                
+                if (elements.editCardBtn) {
+                    elements.editCardBtn.addEventListener('click', handleEditCard);
+                    console.log('✓ Edit button listener added');
+                }
+                
+                if (elements.downloadCardBtn) {
+                    elements.downloadCardBtn.addEventListener('click', handleDownloadCard);
+                    console.log('✓ Download button listener added');
+                }
+                
+                if (elements.shareCardBtn) {
+                    elements.shareCardBtn.addEventListener('click', handleShareCard);
+                    console.log('✓ Share button listener added');
+                }
+                
+                if (elements.deleteCardBtn) {
+                    elements.deleteCardBtn.addEventListener('click', handleDeleteCard);
+                    console.log('✓ Delete button listener added');
+                }
+
+                // Modal
+                if (elements.confirmNo) {
+                    elements.confirmNo.addEventListener('click', closeConfirmModal);
+                    console.log('✓ Modal listeners added');
+                }
+                
+                console.log('✓ All event listeners attached successfully');
+            } catch (error) {
+                console.error('Error setting up event listeners:', error);
+                throw error;
+            }
+        }
+
+        // ==================== Authentication ====================
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const membershipNumber = document.getElementById('membershipNumber').value.trim();
+
+            if (!validateLoginForm(fullName, membershipNumber)) {
+                return;
+            }
+
+            // Check if card exists
+            const savedCard = getSavedCard(membershipNumber);
+            if (!savedCard) {
+                showToast('لم نجد بطاقة برقم الانتماء هذا', 'error');
+                return;
+            }
+
+            // Load user data
+            appState.currentUser = { fullName, membershipNumber };
+            appState.cardData = savedCard;
+            
+            displayCard();
+            showCardScreen();
+            showToast('تم تسجيل الدخول بنجاح', 'success');
+        }
+
+        function validateLoginForm(fullName, membershipNumber) {
+            let isValid = true;
+            const fullNameInput = document.getElementById('fullName');
+            const membershipInput = document.getElementById('membershipNumber');
+
+            // Validate Full Name
+            if (!fullName || fullName.length < 3) {
+                setErrorState(fullNameInput, 'الرجاء إدخال اسم صحيح');
+                isValid = false;
+            } else {
+                clearErrorState(fullNameInput);
+            }
+
+            // Validate Membership Number
+            if (!membershipNumber || membershipNumber.length !== 8 || !/^\d{8}$/.test(membershipNumber)) {
+                setErrorState(membershipInput, 'الرجاء إدخال رقم انتماء صحيح (8 أرقام)');
+                isValid = false;
+            } else {
+                clearErrorState(membershipInput);
+            }
+
+            return isValid;
+        }
+
+        // ==================== Create Card ====================
+        function handleCreateCard(e) {
+            e.preventDefault();
+
+            const cardData = {
+                fullName: document.getElementById('createFullName').value.trim(),
+                membershipNumber: document.getElementById('createMembershipNumber').value.trim(),
+                familyNumber: document.getElementById('createFamilyNumber').value.trim(),
+                birthYear: document.getElementById('createBirthYear').value,
+                gender: document.getElementById('createGender').value,
+                province: document.getElementById('createProvince').value.trim(),
+                centerNumber: document.getElementById('createCenterNumber').value.trim(),
+                centerName: document.getElementById('createCenterName').value.trim(),
+                stationNumber: document.getElementById('createStationNumber').value.trim()
+            };
+
+            // Check all required fields
+            if (!cardData.fullName) {
+                showToast('الرجاء إدخال الاسم الثلاثي', 'error');
+                return;
+            }
+
+            if (!cardData.membershipNumber || cardData.membershipNumber.length !== 8 || !/^\d{8}$/.test(cardData.membershipNumber)) {
+                showToast('الرجاء إدخال رقم انتماء صحيح (8 أرقام)', 'error');
+                return;
+            }
+
+            if (!cardData.familyNumber) {
+                showToast('الرجاء إدخال رقم العائلة', 'error');
+                return;
+            }
+
+            if (!cardData.birthYear || cardData.birthYear < 1900 || cardData.birthYear > 2024) {
+                showToast('الرجاء إدخال سنة ميلاد صحيحة', 'error');
+                return;
+            }
+
+            if (!cardData.gender) {
+                showToast('الرجاء اختيار النوع', 'error');
+                return;
+            }
+
+            if (!cardData.province) {
+                showToast('الرجاء إدخال المحافظة', 'error');
+                return;
+            }
+
+            if (!cardData.centerNumber) {
+                showToast('الرجاء إدخال رقم مركز التسجيل', 'error');
+                return;
+            }
+
+            if (!cardData.centerName) {
+                showToast('الرجاء إدخال اسم المركز', 'error');
+                return;
+            }
+
+            if (!cardData.stationNumber) {
+                showToast('الرجاء إدخال رقم المحطة', 'error');
+                return;
+            }
+
+            if (!appState.photoData) {
+                showToast('الرجاء اختيار صورة شخصية', 'error');
+                return;
+            }
+
+            // Save card to localStorage
+            cardData.photo = appState.photoData;
+            cardData.verificationCode = generateVerificationCode();
+            
+            try {
+                saveCard(cardData);
+
+                // Set current user
+                appState.currentUser = { 
+                    fullName: cardData.fullName, 
+                    membershipNumber: cardData.membershipNumber 
+                };
+                appState.cardData = cardData;
+
+                // Display card
+                displayCard();
+                showCardScreen();
+                showToast('تم إنشاء البطاقة بنجاح! 🎉', 'success');
+                
+                // Reset form
+                elements.createCardForm.reset();
+                appState.photoData = null;
+                updatePhotoPreview();
+            } catch (error) {
+                console.error('Error creating card:', error);
+                showToast('خطأ في حفظ البطاقة: ' + error.message, 'error');
+            }
+        }
+
+        function validateCardForm(data) {
+            let isValid = true;
+
+            if (!data.fullName || data.fullName.length < 3) {
+                showToast('الرجاء إدخال اسم صحيح', 'error');
+                isValid = false;
+            }
+
+            if (!data.membershipNumber || data.membershipNumber.length !== 8) {
+                showToast('الرجاء إدخال رقم انتماء صحيح', 'error');
+                isValid = false;
+            }
+
+            if (!data.province || !data.centerName) {
+                showToast('الرجاء ملء جميع الحقول المطلوبة', 'error');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function handlePhotoSelect(e) {
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            console.log('File selected:', file.name, 'Size:', file.size);
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('حجم الصورة كبير جداً (الحد الأقصى 5 ميجابايت)', 'error');
+                e.target.value = '';
+                appState.photoData = null;
+                updatePhotoPreview();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    appState.photoData = event.target.result;
+                    console.log('Photo loaded successfully');
+                    updatePhotoPreview();
+                    showToast('تم اختيار الصورة بنجاح', 'success');
+                } catch (error) {
+                    console.error('Error loading photo:', error);
+                    showToast('خطأ في قراءة الصورة', 'error');
+                }
+            };
+            reader.onerror = (error) => {
+                console.error('FileReader error:', error);
+                showToast('خطأ في قراءة الصورة', 'error');
+            };
+            
+            try {
+                reader.readAsDataURL(file);
+            } catch (error) {
+                console.error('Error reading file:', error);
+                showToast('خطأ في قراءة الصورة', 'error');
+            }
+        }
+
+        function updatePhotoPreview() {
+            if (appState.photoData) {
+                elements.photoPreview.innerHTML = `<img src="${appState.photoData}" alt="الصورة المختارة">`;
+            } else {
+                elements.photoPreview.innerHTML = `
+                    <i class="fas fa-camera"></i>
+                    <p>انقر لاختيار صورة</p>
+                `;
+            }
+        }
+
+        // ==================== Card Display ====================
+        function displayCard() {
+            try {
+                const card = appState.cardData;
+                if (!card) {
+                    console.error('No card data to display');
+                    return;
+                }
+
+                console.log('Displaying card:', card.fullName);
+
+                // Update card front - check if each element exists first
+                const fieldsToUpdate = {
+                    'cardFullNameDisplay': card.fullName || '-',
+                    'cardMembershipDisplay': card.membershipNumber || '-',
+                    'cardProvinceDisplay': card.province || '-',
+                    'cardBirthYearDisplay': card.birthYear || '-',
+                    'cardGenderDisplay': card.gender || '-',
+                    'cardFamilyNumDisplay': card.familyNumber || '-',
+                    'cardCenterNameDisplay': card.centerName || '-',
+                    'cardCenterNumDisplay': card.centerNumber || '-',
+                    'cardStationNumDisplay': card.stationNumber || '-'
+                };
+
+                for (const [id, value] of Object.entries(fieldsToUpdate)) {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = value;
+                    } else {
+                        console.warn('Element not found:', id);
+                    }
+                }
+
+                // Update photo
+                const photoImg = document.getElementById('cardPhotoImg');
+                if (photoImg && card.photo) {
+                    photoImg.src = card.photo;
+                    console.log('Photo updated');
+                } else if (!photoImg) {
+                    console.warn('Photo element not found');
+                }
+
+                // Generate QR Code
+                console.log('Generating QR Code...');
+                generateQRCode(card);
+
+                // Display verification code
+                const verificationDisplay = document.getElementById('verificationCodeDisplay');
+                if (verificationDisplay) {
+                    verificationDisplay.textContent = card.verificationCode;
+                    console.log('Verification code updated');
+                }
+
+                // Reset flip
+                const cardFlipInner = document.querySelector('.card-flip-inner');
+                if (cardFlipInner) {
+                    cardFlipInner.classList.remove('flipped');
+                }
+
+                console.log('✓ Card displayed successfully');
+            } catch (error) {
+                console.error('Error displaying card:', error);
+                showToast('خطأ في عرض البطاقة', 'error');
+            }
+        }
+
+        function generateQRCode(card) {
+            try {
+                const qrData = `Membership: ${card.membershipNumber}
+Name: ${card.fullName}
+Province: ${card.province}
+Code: ${card.verificationCode}`;
+
+                const qrContainer = document.getElementById('qrCodeContainer');
+                if (!qrContainer) {
+                    console.warn('QR Code container not found');
+                    return;
+                }
+
+                qrContainer.innerHTML = '';
+                
+                if (typeof QRCode === 'undefined') {
+                    console.warn('QRCode library not loaded');
+                    qrContainer.innerHTML = '<p style="color: #999;">QR Code (مكتبة قيد التحميل)</p>';
+                    return;
+                }
+
+                console.log('Creating QR Code...');
+                new QRCode(qrContainer, {
+                    text: qrData,
+                    width: 200,
+                    height: 200,
+                    colorDark: '#1a3a3a',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                console.log('✓ QR Code generated successfully');
+            } catch (error) {
+                console.error('Error generating QR Code:', error);
+                const qrContainer = document.getElementById('qrCodeContainer');
+                if (qrContainer) {
+                    qrContainer.innerHTML = '<p style="color: #999;">خطأ في توليد QR Code</p>';
+                }
+            }
+        }
+
+        function toggleCardFlip() {
+            const inner = document.querySelector('.card-flip-inner');
+            inner.classList.toggle('flipped');
+        }
+
+        // ==================== Card Actions ====================
+        function handleEditCard() {
+            showToast('خاصية التعديل قيد التطوير', 'warning');
+        }
+
+        function handleDownloadCard() {
+            showToast('جاري تحضير البطاقة للتحميل...', 'success');
+            
+            setTimeout(() => {
+                try {
+                    const cardElement = document.querySelector('.card-front');
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas size
+                    canvas.width = 600;
+                    canvas.height = 400;
+                    
+                    // Create a white background
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Export as PNG
+                    canvas.toBlob(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `card-${appState.cardData.membershipNumber}.png`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                        showToast('تم تحميل البطاقة بنجاح', 'success');
+                    }, 'image/png');
+                } catch (err) {
+                    console.error(err);
+                    showToast('خطأ في تحميل البطاقة - سيتم حفظ صورة بسيطة', 'warning');
+                    
+                    // Fallback: Save the photo
+                    if (appState.cardData.photo) {
+                        const link = document.createElement('a');
+                        link.href = appState.cardData.photo;
+                        link.download = `card-${appState.cardData.membershipNumber}.png`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        showToast('تم حفظ صورة البطاقة', 'success');
+                    }
+                }
+            }, 500);
+        }
+
+        function handleShareCard() {
+            const shareData = {
+                title: 'الأساس العراق - بطاقة الانتماء',
+                text: `بطاقتي: ${appState.cardData.fullName}`,
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => {
+                    if (err.name !== 'AbortError') {
+                        showToast('خطأ في المشاركة', 'error');
+                    }
+                });
+            } else {
+                // Fallback
+                const text = `${shareData.title}\n${shareData.text}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('تم نسخ البيانات إلى الحافظة', 'success');
+                });
+            }
+        }
+
+        function handleDeleteCard() {
+            showConfirmModal(
+                'تأكيد الحذف',
+                'هل أنت متأكد من حذف البطاقة؟ لا يمكن التراجع عن هذا الإجراء.',
+                () => {
+                    deleteCard(appState.cardData.membershipNumber);
+                    appState.cardData = null;
+                    handleLogout();
+                    showToast('تم حذف البطاقة بنجاح', 'success');
+                }
+            );
+        }
+
+        function handleLogout() {
+            appState.currentUser = null;
+            appState.cardData = null;
+            appState.photoData = null;
+            
+            // Reset forms
+            elements.loginForm.reset();
+            elements.createCardForm.reset();
+            updatePhotoPreview();
+
+            showLoginScreen();
+            showToast('تم تسجيل الخروج', 'success');
+        }
+
+        // ==================== Storage Management ====================
+        function saveCard(cardData) {
+            try {
+                const cards = getAllCards();
+                cards[cardData.membershipNumber] = cardData;
+                const jsonData = JSON.stringify(cards);
+                console.log('Saving card data, size:', jsonData.length, 'bytes');
+                localStorage.setItem(APP_CONFIG.cardStorageKey, jsonData);
+                console.log('Card saved successfully');
+            } catch (error) {
+                console.error('Storage error:', error);
+                throw error;
+            }
+        }
+
+        function getSavedCard(membershipNumber) {
+            try {
+                const cards = getAllCards();
+                return cards[membershipNumber] || null;
+            } catch (error) {
+                console.error('Error getting card:', error);
+                return null;
+            }
+        }
+
+        function getAllCards() {
+            try {
+                const stored = localStorage.getItem(APP_CONFIG.cardStorageKey);
+                console.log('Retrieved stored cards:', stored ? 'found' : 'not found');
+                return stored ? JSON.parse(stored) : {};
+            } catch (error) {
+                console.error('Error parsing stored cards:', error);
+                return {};
+            }
+        }
+
+        function deleteCard(membershipNumber) {
+            try {
+                const cards = getAllCards();
+                delete cards[membershipNumber];
+                localStorage.setItem(APP_CONFIG.cardStorageKey, JSON.stringify(cards));
+                console.log('Card deleted successfully');
+            } catch (error) {
+                console.error('Error deleting card:', error);
+            }
+        }
+
+        function loadUserData() {
+            try {
+                const stored = localStorage.getItem(APP_CONFIG.storageKey);
+                if (stored) {
+                    appState.currentUser = JSON.parse(stored);
+                    const card = getSavedCard(appState.currentUser.membershipNumber);
+                    if (card) {
+                        appState.cardData = card;
+                        displayCard();
+                        showCardScreen();
+                        console.log('User data loaded successfully');
+                        return;
+                    }
+                }
+                console.log('No saved user data found');
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // ==================== UI Navigation ====================
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            screen.classList.add('active');
+        }
+
+        function showLoginScreen() {
+            showScreen(elements.loginScreen);
+        }
+
+        function showCreateCardScreen() {
+            showScreen(elements.createCardScreen);
+        }
+
+        function showCardScreen() {
+            showScreen(elements.cardScreen);
+            if (appState.currentUser) {
+                localStorage.setItem(APP_CONFIG.storageKey, JSON.stringify(appState.currentUser));
+            }
+        }
+
+        function hideLoading() {
+            elements.loadingScreen.classList.add('hidden');
+            setTimeout(() => {
+                elements.loadingScreen.style.display = 'none';
+            }, 400);
+        }
+
+        // ==================== Notifications ====================
+        function showToast(message, type = 'info') {
+            elements.toast.textContent = message;
+            elements.toast.className = `toast show ${type}`;
+
+            clearTimeout(elements.toast.timeoutId);
+            elements.toast.timeoutId = setTimeout(() => {
+                elements.toast.classList.remove('show');
+            }, 3500);
+        }
+
+        function showConfirmModal(title, message, onConfirm) {
+            elements.modalTitle.textContent = title;
+            elements.modalMessage.textContent = message;
+            elements.confirmModal.classList.add('show');
+
+            const handleConfirm = () => {
+                onConfirm();
+                closeConfirmModal();
+            };
+
+            elements.confirmYes.onclick = handleConfirm;
+        }
+
+        function closeConfirmModal() {
+            elements.confirmModal.classList.remove('show');
+        }
+
+        // ==================== Utilities ====================
+        function generateVerificationCode() {
+            return Math.random().toString(36).substring(2, 10).toUpperCase();
+        }
+
+        function setErrorState(input, message) {
+            const group = input.closest('.form-group');
+            group.classList.add('error');
+            group.querySelector('.error-message').textContent = message;
+        }
+
+        function clearErrorState(input) {
+            const group = input.closest('.form-group');
+            group.classList.remove('error');
+        }
+
+        // ==================== Service Worker Registration ====================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => {
+                console.log('Service Worker registration failed:', err);
+            });
+        }
+
+        // ==================== Start App ====================
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Prevent zoom on iOS
+        document.addEventListener('touchmove', e => {
+            if (e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
