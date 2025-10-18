@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق الهاتف - نظام إدارة البيانات</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/jpeg" href="557336055_807558208323486_5861684320627297371_n.jpg">
+    <meta name="theme-color" content="#6366f1">
+    <style>
+        /* ... نفس الأنماط المستخرجة من التطبيق الرئيسي ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --dark-secondary: #334155;
+            --light: #f8fafc;
+            --light-secondary: #f1f5f9;
+            --bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 400px;
+            margin: 40px auto;
+            background: var(--bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 32px 24px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2em;
+            font-weight: 700;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--light-secondary);
+            font-size: 1em;
+            transition: var(--transition);
+        }
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius);
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        button:hover {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+        .link {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .user-data {
+            background: var(--light-secondary);
+            border-radius: var(--radius-lg);
+            padding: 28px 18px 18px 18px;
+            margin-top: 28px;
+            box-shadow: var(--shadow-md);
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        .flip-card {
+            background: transparent;
+            width: 220px;
+            height: 140px;
+            margin: 0 auto 18px auto;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .flip-card-front img, .flip-card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        .user-info {
+            margin-top: 18px;
+            text-align: right;
+        }
+        .user-info strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        .user-info span {
+            color: var(--text);
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+                <div id="splash" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;">
+                    <img src="557336055_807558208323486_5861684320627297371_n.jpg" alt="شعار التطبيق" style="width:180px;height:180px;border-radius:32px;box-shadow:0 4px 24px #6366f155;">
+                </div>
+                <div class="container" id="app" style="display:none;"></div>
+        <script>
+            // تسجيل service worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('service-worker.js');
+                });
+            }
+            // إخفاء شاشة الانتظار بعد تحميل التطبيق
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    document.getElementById('splash').style.display = 'none';
+                    document.getElementById('app').style.display = 'block';
+                }, 1800); // مدة الانتظار 1.8 ثانية
+            });
+            // عرض رسالة تثبيت التطبيق للمستخدم
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // زر أو رسالة مخصصة
+                let installBtn = document.createElement('button');
+                installBtn.textContent = 'تثبيت التطبيق على جهازك';
+                installBtn.style = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;padding:12px 32px;border-radius:16px;font-size:1.1em;z-index:9999;box-shadow:0 2px 8px #6366f133;';
+                installBtn.onclick = function() {
+                    installBtn.style.display = 'none';
+                    deferredPrompt.prompt();
+                };
+                document.body.appendChild(installBtn);
+            });
+        </script>
+    <script>
+        // نفس قائمة الأغذية (الأقضية) من التطبيق الرئيسي
+        const qadaList = [
+            'الهاشمية',
+            'الدبلة',
+            'الحمزة',
+            'الغربي',
+            'القاسم',
+            'الجربوعية',
+            'العمادية',
+            'أكياس',
+            'أجبلة',
+            'مركز المحافظة',
+            'المحاويل'
+        ];
+
+        // إعدادات Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGpAHia_wEmrhnmYjrPf1n1TrAzwEMiAI",
+            authDomain: "messageemeapp.firebaseapp.com",
+            databaseURL: "https://messageemeapp-default-rtdb.firebaseio.com",
+            projectId: "messageemeapp",
+            storageBucket: "messageemeapp.appspot.com",
+            messagingSenderId: "255034474844",
+            appId: "1:255034474844:web:5e3b7a6bc4b2fb94cc4199",
+            measurementId: "G-4QBEWRC583"
+        };
+        if (typeof firebase === 'undefined') {
+            alert('يرجى التأكد من توفر مكتبة Firebase في الصفحة');
+        } else {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+        }
+        const db = typeof firebase !== 'undefined' ? firebase.database() : null;
+
+        // وظائف المساعدة
+// حذف البيانات المحلية فقط
+function clearLocalData() {
+    localStorage.removeItem('users');
+    localStorage.removeItem('currentUser');
+    location.reload();
+}
+        function saveUser(user) {
+            // حفظ محلي
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            // حفظ في Firebase
+            if (db) {
+                // استخدم رقم الهاتف كمفتاح فريد
+                db.ref('users/' + user.phone).set(user);
+            }
+        }
+        function findUser(name, phone) {
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            return users.find(u => u.fullName === name && u.phone === phone);
+        }
+        function getUserData(phone) {
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            return users.find(u => u.phone === phone);
+        }
+
+        // واجهة تسجيل الدخول
+        function renderLogin() {
+            document.getElementById('app').innerHTML = `
+                <h2>تسجيل الدخول</h2>
+                <form id="loginForm">
+                    <label>الاسم الثلاثي</label>
+                    <input type="text" name="fullName" required>
+                    <label>رقم الهاتف</label>
+                    <input type="text" name="phone" required>
+                    <button type="submit">دخول</button>
+                </form>
+                <span class="link" onclick="renderRegister()">ليس لديك حساب؟ أنشئ حساب جديد</span>
+            `;
+            document.getElementById('loginForm').onsubmit = function(e) {
+                e.preventDefault();
+                const fullName = this.fullName.value.trim();
+                const phone = this.phone.value.trim();
+                const user = findUser(fullName, phone);
+                if (user) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    renderUserData(user);
+                } else {
+                    alert('لا يوجد مستخدم بهذه البيانات!');
+                }
+            };
+        }
+
+        // واجهة إنشاء حساب جديد
+        function renderRegister() {
+            document.getElementById('app').innerHTML = `
+                <h2>إنشاء حساب جديد</h2>
+                <form id="registerForm">
+                    <label>الاسم الثلاثي</label>
+                    <input type="text" name="fullName" required>
+                    <label>رقم الهاتف</label>
+                    <input type="text" name="phone" required>
+                    <label>تاريخ الميلاد</label>
+                    <input type="date" name="birthDate" required>
+                    <label>القضاء</label>
+                    <select name="district" required>
+                        ${qadaList.map(q => `<option value="${q}">${q}</option>`).join('')}
+                    </select>
+                    <label>الجنس</label>
+                    <select name="gender" required>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                    <label>ملاحظات (اختياري)</label>
+                    <input type="text" name="notes">
+                    <label>الصورة الأمامية</label>
+                    <input type="file" name="front" accept="image/*" required>
+                    <label>الصورة الخلفية</label>
+                    <input type="file" name="back" accept="image/*" required>
+                    <button type="submit">إنشاء الحساب</button>
+                </form>
+                <span class="link" onclick="renderLogin()">لديك حساب؟ تسجيل الدخول</span>
+            `;
+            document.getElementById('registerForm').onsubmit = function(e) {
+                e.preventDefault();
+                const fullName = this.fullName.value.trim();
+                const phone = this.phone.value.trim();
+                const birthDate = this.birthDate.value;
+                const district = this.district.value;
+                const gender = this.gender.value;
+                const notes = this.notes.value.trim();
+                const frontFile = this.front.files[0];
+                const backFile = this.back.files[0];
+                if (!frontFile || !backFile) {
+                    alert('يرجى رفع الصور المطلوبة');
+                    return;
+                }
+                const readerFront = new FileReader();
+                const readerBack = new FileReader();
+                readerFront.onload = function() {
+                    readerBack.onload = function() {
+                        const user = {
+                            fullName,
+                            phone,
+                            birthDate,
+                            district,
+                            gender,
+                            notes,
+                            images: {
+                                front: readerFront.result,
+                                back: readerBack.result
+                            },
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        };
+                        saveUser(user);
+                        renderUserData(user);
+                    };
+                    readerBack.readAsDataURL(backFile);
+                };
+                readerFront.readAsDataURL(frontFile);
+            };
+        }
+
+        // عرض بيانات المستخدم
+        function renderUserData(user) {
+            document.getElementById('app').innerHTML = `
+                <h2>بيانات المستخدم</h2>
+                <div class="user-data">
+                    <div style="text-align:center; margin-bottom:12px; position:relative; display:inline-block;">
+                        <label for="profileInput" style="cursor:pointer;">
+                            <img id="profileImg" src="${user.profileImg ? user.profileImg : (user.images && user.images.front ? user.images.front : '')}" alt="صورة المستخدم" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px dashed var(--primary);box-shadow:var(--shadow-md);">
+                            ${!user.profileImg ? `<div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);color:var(--primary);font-size:0.95em;font-weight:bold;background:#fff;padding:2px 10px;border-radius:12px;box-shadow:0 2px 8px #6366f133;">أضف صورة انتخابك هنا</div>` : ''}
+                        </label>
+                        <input type="file" id="profileInput" accept="image/*" capture="environment" style="display:none">
+                    </div>
+                    <div class="flip-card" id="flipCard">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="${user.images && user.images.front ? user.images.front : ''}" alt="الصورة الأمامية">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="${user.images && user.images.back ? user.images.back : ''}" alt="الصورة الخلفية">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <div><strong>الاسم الثلاثي:</strong> <span>${user.fullName}</span></div>
+                        <div><strong>رقم الهاتف:</strong> <span>${user.phone}</span></div>
+                        <div><strong>تاريخ الميلاد:</strong> <span>${user.birthDate}</span></div>
+                        <div><strong>القضاء:</strong> <span>${user.district}</span></div>
+                        <div><strong>الجنس:</strong> <span>${user.gender}</span></div>
+                        ${user.notes ? `<div><strong>ملاحظات:</strong> <span>${user.notes}</span></div>` : ''}
+                    </div>
+                </div>
+                <button onclick="logoutUser()" style="margin-top:24px">تسجيل خروج</button>
+            `;
+            // إضافة حدث flip للصورة
+            setTimeout(function() {
+                var flipCard = document.getElementById('flipCard');
+                if (flipCard) {
+                    flipCard.addEventListener('click', function() {
+                        flipCard.classList.toggle('flipped');
+                    });
+                }
+                var profileInput = document.getElementById('profileInput');
+                var profileImg = document.getElementById('profileImg');
+                if (profileImg && profileInput) {
+                    profileImg.onclick = function() { profileInput.click(); };
+                    profileInput.onchange = function(e) {
+                        var file = e.target.files[0];
+                        if (file) {
+                            var reader = new FileReader();
+                            reader.onload = function(ev) {
+                                document.getElementById('profileImg').src = ev.target.result;
+                                user.profileImg = ev.target.result;
+                                let users = JSON.parse(localStorage.getItem('users') || '[]');
+                                let idx = users.findIndex(u => u.phone === user.phone);
+                                if (idx !== -1) {
+                                    users[idx].profileImg = ev.target.result;
+                                    localStorage.setItem('users', JSON.stringify(users));
+                                }
+                                if (typeof db !== 'undefined' && db) {
+                                    db.ref('users/' + user.phone + '/profileImg').set(ev.target.result);
+                                }
+                                renderUserData(user);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                }
+            }, 100);
+        }
+
+        // دالة تسجيل الخروج
+        function logoutUser() {
+            localStorage.removeItem('currentUser');
+            renderLogin();
+        }
+
+        // بدء التطبيق
+        // عند بدء التطبيق، إذا كان هناك مستخدم مسجل الدخول في localStorage، اعرض بياناته مباشرة
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            renderUserData(JSON.parse(currentUser));
+        } else {
+            // عند بدء التطبيق، استرجاع جميع البيانات من قاعدة البيانات إذا لم توجد بيانات محلية
+            if (typeof db !== 'undefined' && db) {
+                db.ref('users').once('value').then(snapshot => {
+                    const users = snapshot.val() ? Object.values(snapshot.val()) : [];
+                    localStorage.setItem('users', JSON.stringify(users));
+                    renderLogin();
+                });
+            } else {
+                renderLogin();
+            }
+        }
+    </script>
+</body>
+</html>
