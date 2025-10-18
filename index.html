@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تطبيق الهاتف - نظام إدارة البيانات</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/jpeg" href="557336055_807558208323486_5861684320627297371_n.jpg">
     <meta name="theme-color" content="#6366f1">
     <style>
         /* ... نفس الأنماط المستخرجة من التطبيق الرئيسي ... */
@@ -172,10 +172,10 @@
     </style>
 </head>
 <body>
-                <div id="splash" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;">
-                    <img src="557336055_807558208323486_5861684320627297371_n.jpg" alt="شعار التطبيق" style="width:180px;height:180px;border-radius:32px;box-shadow:0 4px 24px #6366f155;">
-                </div>
-                <div class="container" id="app" style="display:none;"></div>
+        <div id="splash" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf" alt="شعار التطبيق" style="width:180px;height:180px;border-radius:32px;box-shadow:0 4px 24px #6366f155;">
+        </div>
+        <div class="container" id="app" style="display:none;"></div>
         <script>
             // تسجيل service worker
             if ('serviceWorker' in navigator) {
@@ -205,6 +205,14 @@
                 };
                 document.body.appendChild(installBtn);
             });
+        </script>
+        <script>
+            // تسجيل service worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('service-worker.js');
+                });
+            }
         </script>
     <script>
         // نفس قائمة الأغذية (الأقضية) من التطبيق الرئيسي
