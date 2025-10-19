@@ -392,8 +392,6 @@ function clearLocalData() {
                     <input type="text" name="notes">
                     <label>الصورة الأمامية</label>
                     <input type="file" name="front" accept="image/*" required>
-                    <label>الصورة الخلفية</label>
-                    <input type="file" name="back" accept="image/*" required>
                     <button type="submit">إنشاء الحساب</button>
                 </form>
                 <span class="link" onclick="renderLogin()">لديك حساب؟ تسجيل الدخول</span>
@@ -408,9 +406,8 @@ function clearLocalData() {
                 const candidate = this.candidate.value;
                 const notes = this.notes.value.trim();
                 const frontFile = this.front.files[0];
-                const backFile = this.back.files[0];
-                if (!frontFile || !backFile) {
-                    alert('يرجى رفع الصور المطلوبة');
+                if (!frontFile) {
+                    alert('يرجى رفع الصورة الأمامية المطلوبة');
                     return;
                 }
                 if (!candidate) {
@@ -418,28 +415,23 @@ function clearLocalData() {
                     return;
                 }
                 const readerFront = new FileReader();
-                const readerBack = new FileReader();
                 readerFront.onload = function() {
-                    readerBack.onload = function() {
-                        const user = {
-                            fullName,
-                            phone,
-                            birthDate,
-                            district,
-                            gender,
-                            candidate,
-                            notes,
-                            images: {
-                                front: readerFront.result,
-                                back: readerBack.result
-                            },
-                            createdAt: new Date().toISOString(),
-                            updatedAt: new Date().toISOString()
-                        };
-                        saveUser(user);
-                        renderUserData(user);
+                    const user = {
+                        fullName,
+                        phone,
+                        birthDate,
+                        district,
+                        gender,
+                        candidate,
+                        notes,
+                        images: {
+                            front: readerFront.result
+                        },
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
                     };
-                    readerBack.readAsDataURL(backFile);
+                    saveUser(user);
+                    renderUserData(user);
                 };
                 readerFront.readAsDataURL(frontFile);
             };
@@ -462,9 +454,6 @@ function clearLocalData() {
                             <div class="flip-card-front">
                                 <img src="${user.images && user.images.front ? user.images.front : ''}" alt="الصورة الأمامية">
                             </div>
-                            <div class="flip-card-back">
-                                <img src="${user.images && user.images.back ? user.images.back : ''}" alt="الصورة الخلفية">
-                            </div>
                         </div>
                     </div>
                     <div class="user-info">
@@ -479,7 +468,7 @@ function clearLocalData() {
                 </div>
                 <button onclick="logoutUser()" style="margin-top:24px">تسجيل خروج</button>
             `;
-            // إضافة حدث flip للصورة
+            // إضافة حدث flip للصورة (لم يعد هناك صورة خلفية)
             setTimeout(function() {
                 var flipCard = document.getElementById('flipCard');
                 if (flipCard) {
