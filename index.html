@@ -215,19 +215,67 @@
             }
         </script>
     <script>
-        // نفس قائمة الأغذية (الأقضية) من التطبيق الرئيسي
+        // نفس قائمة (الأقضية) من التطبيق الرئيسي
         const qadaList = [
+            // قضاء الحلة (مركز المحافظة)
+            'الحلة',
+            'الكفل',
+            'أبي غرق',
+            'سنجار',
+
+            // قضاء الهاشمية
             'الهاشمية',
-            'الدبلة',
-            'الحمزة',
-            'الغربي',
             'القاسم',
-            'الجربوعية',
-            'العمادية',
-            'أكياس',
-            'أجبلة',
-            'مركز المحافظة',
-            'المحاويل'
+            'المدحتية',
+            'الشوملي',
+            'الطليعة',
+
+            // قضاء المحاويل
+            'المحاويل',
+            'المشروع',
+            'الإمام',
+            'النيل',
+
+            // قضاء المسيب
+            'المسيب',
+            'الإسكندرية',
+            'سدة الهندية',
+            'جرف الصخر'
+        ];
+
+        // قائمة المرشحين (ائتلاف الأساس / بابل)
+        const candidateList = [
+            "سيد حسين السعبري",
+            "حمزه جبار حربي محمد",
+            "عدي اركان عباس نعمان",
+            "عصام فخري برتو عويد",
+            "احمد بدر جاسم حسین",
+            "اکرام کامل ظاهر محسن",
+            "ميثم عبد الجاسم عبد الحمزه",
+            "فرح احمد کامل درب",
+            "محمد جواد عبد الكاظم",
+            "تحسين فليح حسن عبود",
+            "حسين كامل ناجي معيدي",
+            "حميد حمزه کاظم مسیر",
+            "ابتسام حسن ذياب مرزوك",
+            "اسیل خالد عبد محمد",
+            "محمد هادي كاظم جواد",
+            "سلام عبد الكاظم عبد الله",
+            "ثائر عبد اللطيف عبد الحميد",
+            "زهره محمد سعود عزیز",
+            "مرزة حمزة عبدمعين",
+            "عمر خضير عباس كسار",
+            "زينب عباس علي لطيف",
+            "زهير عباس عبود رزوقي",
+            "الاء عبد الكاظم عباس",
+            "غيث علي سميسم عبيد",
+            "ياسر عامر صبار محيسن",
+            "كريم سعد حسين لوطان",
+            "نداء طالب محسن ثاجب",
+            "أسماء حسين جدوع کاظم",
+            "زهير جواد ناجي عباس",
+            "احمد سلمان عوده بريو",
+            "سعود حسن جمعة مطر"
         ];
 
         // إعدادات Firebase
@@ -324,6 +372,11 @@ function clearLocalData() {
                         <option value="ذكر">ذكر</option>
                         <option value="أنثى">أنثى</option>
                     </select>
+                    <label><i class="fas fa-user-tie"></i> اسم المرشح (ائتلاف الأساس / بابل)</label>
+                    <select name="candidate" required>
+                        <option value="">-- اختر اسم المرشح --</option>
+                        ${candidateList.map(c => `<option value="${c}">${c}</option>`).join('')}
+                    </select>
                     <label>ملاحظات (اختياري)</label>
                     <input type="text" name="notes">
                     <label>الصورة الأمامية</label>
@@ -341,11 +394,16 @@ function clearLocalData() {
                 const birthDate = this.birthDate.value;
                 const district = this.district.value;
                 const gender = this.gender.value;
+                const candidate = this.candidate.value;
                 const notes = this.notes.value.trim();
                 const frontFile = this.front.files[0];
                 const backFile = this.back.files[0];
                 if (!frontFile || !backFile) {
                     alert('يرجى رفع الصور المطلوبة');
+                    return;
+                }
+                if (!candidate) {
+                    alert('يرجى اختيار اسم المرشح');
                     return;
                 }
                 const readerFront = new FileReader();
@@ -358,6 +416,7 @@ function clearLocalData() {
                             birthDate,
                             district,
                             gender,
+                            candidate,
                             notes,
                             images: {
                                 front: readerFront.result,
@@ -403,6 +462,7 @@ function clearLocalData() {
                         <div><strong>تاريخ الميلاد:</strong> <span>${user.birthDate}</span></div>
                         <div><strong>القضاء:</strong> <span>${user.district}</span></div>
                         <div><strong>الجنس:</strong> <span>${user.gender}</span></div>
+                        <div><strong>اسم المرشح:</strong> <span>${user.candidate ? user.candidate : ''}</span></div>
                         ${user.notes ? `<div><strong>ملاحظات:</strong> <span>${user.notes}</span></div>` : ''}
                     </div>
                 </div>
