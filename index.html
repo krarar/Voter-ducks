@@ -1,283 +1,566 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf">
+    <link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الهاتف - نظام إدارة البيانات</title>
+    <title>تطبيق الانتخابات - صوتك مستقبلك</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5">
     <style>
-        /* ... نفس الأنماط المستخرجة من التطبيق الرئيسي ... */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --secondary: #8b5cf6;
-            --accent: #ec4899;
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --dark: #1e293b;
-            --dark-secondary: #334155;
+            --dark: #0f172a;
+            --dark-secondary: #1e293b;
             --light: #f8fafc;
-            --light-secondary: #f1f5f9;
             --bg: #ffffff;
-            --bg-secondary: #f8fafc;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
+            --bg-gradient: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
             --text: #1e293b;
             --text-light: #64748b;
-            --text-muted: #94a3b8;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-            --radius: 12px;
-            --radius-sm: 8px;
-            --radius-lg: 16px;
-            --sidebar-width: 280px;
-            --header-height: 70px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border: #e2e8f0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.25);
         }
+        
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg) 100%);
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #fef3c7 100%);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
+            min-height: 100vh;
         }
+
+        /* شاشة الانتظار */
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-gradient);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .splash-logo {
+            width: 200px;
+            height: 200px;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 40px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .splash-text {
+            color: white;
+            text-align: center;
+            padding: 0 30px;
+            max-width: 500px;
+        }
+
+        .splash-text h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .splash-text p {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .splash-text .quote {
+            font-size: 1.1em;
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+            line-height: 1.6;
+        }
+
+        .loading-spinner {
+            margin-top: 40px;
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Container */
         .container {
-            max-width: 400px;
+            max-width: 450px;
             margin: 40px auto;
             background: var(--bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-            padding: 32px 24px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px 30px;
+            animation: slideUp 0.6s ease-out;
         }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .app-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .app-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 25px;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.3);
+        }
+
         h2 {
             text-align: center;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            margin-bottom: 15px;
+            background: var(--bg-gradient);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 2em;
-            font-weight: 700;
+            font-size: 2.2em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.05em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* Form Styles */
         label {
             display: block;
-            margin-bottom: 8px;
-            color: var(--text-light);
-            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
         input, select {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 18px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--light-secondary);
-            font-size: 1em;
-            transition: var(--transition);
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--border);
+            background: var(--light);
+            font-size: 1.05em;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
+
         input:focus, select:focus {
             border-color: var(--primary);
             outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+            transform: translateY(-2px);
         }
+
+        input[type="file"] {
+            padding: 12px;
+            cursor: pointer;
+            background: var(--light);
+            border: 2px dashed var(--primary);
+        }
+
+        /* Button */
         button {
             width: 100%;
-            padding: 12px;
-            border-radius: var(--radius);
+            padding: 18px;
+            border-radius: 15px;
             border: none;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: var(--bg-gradient);
             color: white;
-            font-size: 1.1em;
-            font-weight: 600;
+            font-size: 1.2em;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            letter-spacing: 0.5px;
         }
+
         button:hover {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(30, 64, 175, 0.4);
         }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Link */
         .link {
             display: block;
             text-align: center;
-            margin-top: 12px;
+            margin-top: 20px;
             color: var(--primary);
             cursor: pointer;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+        }
+
+        .link:hover {
+            color: var(--primary-dark);
             text-decoration: underline;
         }
+
+        /* User Data Card */
         .user-data {
-            background: var(--light-secondary);
-            border-radius: var(--radius-lg);
-            padding: 28px 18px 18px 18px;
-            margin-top: 28px;
-            box-shadow: var(--shadow-md);
-            max-width: 350px;
-            margin-left: auto;
-            margin-right: auto;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            border-radius: 25px;
+            padding: 35px 25px;
+            margin-top: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(30, 64, 175, 0.1);
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 30px;
             position: relative;
         }
+
+        .profile-img-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--success);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* ID Card */
         .flip-card {
             background: transparent;
-            width: 220px;
-            height: 140px;
-            margin: 0 auto 18px auto;
+            width: 280px;
+            height: 180px;
+            margin: 0 auto 25px;
             perspective: 1000px;
             cursor: pointer;
         }
+
         .flip-card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s;
+            transition: transform 0.8s;
             transform-style: preserve-3d;
         }
+
         .flip-card.flipped .flip-card-inner {
             transform: rotateY(180deg);
         }
-        .flip-card-front, .flip-card-back {
+
+        .flip-card-front {
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            border: 3px solid white;
         }
-        .flip-card-front img, .flip-card-back img {
+
+        .flip-card-front img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .flip-card-back {
-            transform: rotateY(180deg);
-        }
+
+        /* User Info */
         .user-info {
-            margin-top: 18px;
             text-align: right;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
-        .user-info strong {
-            color: var(--primary-dark);
+
+        .user-info-item {
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .user-info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .user-info-content {
+            flex: 1;
+        }
+
+        .user-info-label {
+            color: var(--text-light);
             font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 3px;
         }
-        .user-info span {
-            color: var(--text);
-            margin-right: 6px;
+
+        .user-info-value {
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 1.05em;
+        }
+
+        /* Badge */
+        .candidate-badge {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(30, 64, 175, 0.3);
+        }
+
+        /* Install Button */
+        .install-button {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-gradient);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.15em;
+            font-weight: 800;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.4);
+            border: none;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            h2 {
+                font-size: 1.8em;
+            }
+            
+            .splash-text h1 {
+                font-size: 2em;
+            }
         }
     </style>
-    <!-- أضف مكتبة Firebase قبل أي كود يستخدمها -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 </head>
 <body>
-        <div id="splash" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;">
-          <img src="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf" alt="شعار التطبيق" style="width:180px;height:180px;border-radius:32px;box-shadow:0 4px 24px #6366f155;">
+    <!-- شاشة الانتظار -->
+    <div id="splash">
+        <img src="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5" alt="شعار التطبيق" class="splash-logo">
+        <div class="splash-text">
+            <h1>🗳️ صوتك اليوم هو مستقبلك غداً</h1>
+            <p>معاً نبني عراقاً أفضل</p>
+            <p class="quote">"المشاركة في الانتخابات مسؤولية وطنية، اختر من يمثلك بحكمة"</p>
         </div>
-        <div class="container" id="app" style="display:none;"></div>
-        <script>
-            // تسجيل service worker
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('service-worker.js');
-                });
-            }
-            // إخفاء شاشة الانتظار بعد تحميل التطبيق
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container" id="app" style="display:none;"></div>
+
+    <script>
+        // تسجيل service worker
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js');
+            });
+        }
+
+        // إخفاء شاشة الانتظار
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('splash').style.opacity = '0';
+                document.getElementById('splash').style.transition = 'opacity 0.5s ease';
                 setTimeout(function() {
                     document.getElementById('splash').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
-                }, 1800); // مدة الانتظار 1.8 ثانية
-            });
-            // عرض رسالة تثبيت التطبيق للمستخدم
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                // زر أو رسالة مخصصة
-                let installBtn = document.createElement('button');
-                installBtn.textContent = 'تثبيت التطبيق على جهازك';
-                installBtn.style = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;padding:12px 32px;border-radius:16px;font-size:1.1em;z-index:9999;box-shadow:0 2px 8px #6366f133;';
-                installBtn.onclick = function() {
-                    installBtn.style.display = 'none';
-                    deferredPrompt.prompt();
-                };
-                document.body.appendChild(installBtn);
-            });
-        </script>
-        <script>
-            // تسجيل service worker
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('service-worker.js');
-                });
-            }
-        </script>
-    <script>
-        // نفس قائمة (الأقضية) من التطبيق الرئيسي
+                }, 500);
+            }, 2500);
+        });
+
+        // زر التثبيت
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            let installBtn = document.createElement('button');
+            installBtn.textContent = '📱 ثبّت التطبيق على جهازك';
+            installBtn.className = 'install-button';
+            installBtn.onclick = function() {
+                installBtn.style.display = 'none';
+                deferredPrompt.prompt();
+            };
+            document.body.appendChild(installBtn);
+        });
+
+        // قوائم البيانات
         const qadaList = [
-            // قضاء الحلة (مركز المحافظة)
-            'الحلة',
-            'الكفل',
-            'أبي غرق',
-            'سنجار',
-
-            // قضاء الهاشمية
-            'الهاشمية',
-            'القاسم',
-            'المدحتية',
-            'الشوملي',
-            'الطليعة',
-
-            // قضاء المحاويل
-            'المحاويل',
-            'المشروع',
-            'الإمام',
-            'النيل',
-
-            // قضاء المسيب
-            'المسيب',
-            'الإسكندرية',
-            'سدة الهندية',
-            'جرف الصخر'
+            'الحلة', 'الكفل', 'أبي غرق', 'سنجار',
+            'الهاشمية', 'القاسم', 'المدحتية', 'الشوملي', 'الطليعة',
+            'المحاويل', 'المشروع', 'الإمام', 'النيل',
+            'المسيب', 'الإسكندرية', 'سدة الهندية', 'جرف الصخر'
         ];
 
-        // قائمة المرشحين (ائتلاف الأساس / بابل)
         const candidateList = [
-            "سيد حسين السعبري",
-            "حمزه جبار حربي محمد",
-            "عدي اركان عباس نعمان",
-            "عصام فخري برتو عويد",
-            "احمد بدر جاسم حسین",
-            "اکرام کامل ظاهر محسن",
-            "ميثم عبد الجاسم عبد الحمزه",
-            "فرح احمد کامل درب",
-            "محمد جواد عبد الكاظم",
-            "تحسين فليح حسن عبود",
-            "حسين كامل ناجي معيدي",
-            "حميد حمزه کاظم مسیر",
-            "ابتسام حسن ذياب مرزوك",
-            "اسیل خالد عبد محمد",
-            "محمد هادي كاظم جواد",
-            "سلام عبد الكاظم عبد الله",
-            "ثائر عبد اللطيف عبد الحميد",
-            "زهره محمد سعود عزیز",
-            "مرزة حمزة عبدمعين",
-            "عمر خضير عباس كسار",
-            "زينب عباس علي لطيف",
-            "زهير عباس عبود رزوقي",
-            "الاء عبد الكاظم عباس",
-            "غيث علي سميسم عبيد",
-            "ياسر عامر صبار محيسن",
-            "كريم سعد حسين لوطان",
-            "نداء طالب محسن ثاجب",
-            "أسماء حسين جدوع کاظم",
-            "زهير جواد ناجي عباس",
-            "احمد سلمان عوده بريو",
+            "سيد حسين السعبري", "حمزه جبار حربي محمد", "عدي اركان عباس نعمان",
+            "عصام فخري برتو عويد", "احمد بدر جاسم حسین", "اکرام کامل ظاهر محسن",
+            "ميثم عبد الجاسم عبد الحمزه", "فرح احمد کامل درب", "محمد جواد عبد الكاظم",
+            "تحسين فليح حسن عبود", "حسين كامل ناجي معيدي", "حميد حمزه کاظم مسیر",
+            "ابتسام حسن ذياب مرزوقي", "اسیل خالد عبد محمد", "محمد هادي كاظم جواد",
+            "سلام عبد الكاظم عبد الله", "ثائر عبد اللطيف عبد الحميد", "زهره محمد سعود عزیز",
+            "مرزة حمزة عبدمعين", "عمر خضير عباس كسار", "زينب عباس علي لطيف",
+            "زهير عباس عبود رزوقي", "الاء عبد الكاظم عباس", "غيث علي سميسم عبيد",
+            "ياسر عامر صبار محيسن", "كريم سعد حسين لوطان", "نداء طالب محسن ثاجب",
+            "أسماء حسين جدوع کاظم", "زهير جواد ناجي عباس", "احمد سلمان عوده بريو",
             "سعود حسن جمعة مطر"
         ];
 
@@ -292,62 +575,49 @@
             appId: "1:255034474844:web:5e3b7a6bc4b2fb94cc4199",
             measurementId: "G-4QBEWRC583"
         };
-        if (typeof firebase === 'undefined') {
-            alert('يرجى التأكد من توفر مكتبة Firebase في الصفحة');
-        } else {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
+
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
         const db = typeof firebase !== 'undefined' ? firebase.database() : null;
 
         // وظائف المساعدة
-// حذف البيانات المحلية فقط
-function clearLocalData() {
-    localStorage.removeItem('users');
-    localStorage.removeItem('currentUser');
-    location.reload();
-}
         function saveUser(user) {
-            // حفظ محلي
             let users = JSON.parse(localStorage.getItem('users') || '[]');
             users.push(user);
             localStorage.setItem('users', JSON.stringify(users));
-            // حفظ في Firebase
             if (db) {
-                // استخدم رقم الهاتف كمفتاح فريد
                 db.ref('users/' + user.phone).set(user, function(error) {
                     if (error) {
-                        alert('حدث خطأ أثناء حفظ البيانات في قاعدة البيانات: ' + error.message);
+                        alert('حدث خطأ أثناء حفظ البيانات: ' + error.message);
                     } else {
-                        alert('تم حفظ بياناتك بنجاح في قاعدة البيانات!');
+                        alert('تم حفظ بياناتك بنجاح! 🎉');
                     }
                 });
-            } else {
-                alert('تعذر الاتصال بقاعدة بيانات Firebase. يرجى التأكد من توفر الاتصال.');
             }
         }
+
         function findUser(name, phone) {
             let users = JSON.parse(localStorage.getItem('users') || '[]');
             return users.find(u => u.fullName === name && u.phone === phone);
-        }
-        function getUserData(phone) {
-            let users = JSON.parse(localStorage.getItem('users') || '[]');
-            return users.find(u => u.phone === phone);
         }
 
         // واجهة تسجيل الدخول
         function renderLogin() {
             document.getElementById('app').innerHTML = `
+                <div class="app-header">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5" alt="شعار" class="app-logo">
+                </div>
                 <h2>تسجيل الدخول</h2>
+                <p class="subtitle">مرحباً بك في نظام الانتخابات</p>
                 <form id="loginForm">
-                    <label>الاسم الثلاثي</label>
-                    <input type="text" name="fullName" required>
-                    <label>رقم الهاتف</label>
-                    <input type="text" name="phone" required>
-                    <button type="submit">دخول</button>
+                    <label>👤 الاسم الثلاثي</label>
+                    <input type="text" name="fullName" placeholder="أدخل اسمك الكامل" required>
+                    <label>📱 رقم الهاتف</label>
+                    <input type="text" name="phone" placeholder="07XX XXX XXXX" required>
+                    <button type="submit">دخول 🚀</button>
                 </form>
-                <span class="link" onclick="renderRegister()">ليس لديك حساب؟ أنشئ حساب جديد</span>
+                <span class="link" onclick="renderRegister()">ليس لديك حساب؟ أنشئ حساب جديد 📝</span>
             `;
             document.getElementById('loginForm').onsubmit = function(e) {
                 e.preventDefault();
@@ -358,43 +628,48 @@ function clearLocalData() {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     renderUserData(user);
                 } else {
-                    alert('لا يوجد مستخدم بهذه البيانات!');
+                    alert('⚠️ لا يوجد مستخدم بهذه البيانات!');
                 }
             };
         }
 
-        // واجهة إنشاء حساب جديد
+        // واجهة إنشاء حساب
         function renderRegister() {
             document.getElementById('app').innerHTML = `
+                <div class="app-header">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5" alt="شعار" class="app-logo">
+                </div>
                 <h2>إنشاء حساب جديد</h2>
+                <p class="subtitle">انضم إلى نظام الانتخابات</p>
                 <form id="registerForm">
-                    <label>الاسم الثلاثي</label>
-                    <input type="text" name="fullName" required>
-                    <label>رقم الهاتف</label>
-                    <input type="text" name="phone" required>
-                    <label>تاريخ الميلاد</label>
+                    <label>👤 الاسم الثلاثي</label>
+                    <input type="text" name="fullName" placeholder="أدخل اسمك الكامل" required>
+                    <label>📱 رقم الهاتف</label>
+                    <input type="text" name="phone" placeholder="07XX XXX XXXX" required>
+                    <label>📅 تاريخ الميلاد</label>
                     <input type="date" name="birthDate" required>
-                    <label>القضاء</label>
+                    <label>📍 القضاء</label>
                     <select name="district" required>
+                        <option value="">-- اختر القضاء --</option>
                         ${qadaList.map(q => `<option value="${q}">${q}</option>`).join('')}
                     </select>
-                    <label>الجنس</label>
+                    <label>⚧️ الجنس</label>
                     <select name="gender" required>
                         <option value="ذكر">ذكر</option>
                         <option value="أنثى">أنثى</option>
                     </select>
-                    <label><i class="fas fa-user-tie"></i> اسم المرشح (ائتلاف الأساس / بابل)</label>
+                    <label>🎯 اسم المرشح</label>
                     <select name="candidate" required>
-                        <option value="">-- اختر اسم المرشح --</option>
+                        <option value="">-- اختر المرشح --</option>
                         ${candidateList.map(c => `<option value="${c}">${c}</option>`).join('')}
                     </select>
-                    <label>ملاحظات (اختياري)</label>
-                    <input type="text" name="notes">
-                    <label>الصورة الأمامية</label>
+                    <label>📝 ملاحظات (اختياري)</label>
+                    <input type="text" name="notes" placeholder="أضف ملاحظاتك هنا">
+                    <label>📸 الصورة الأمامية</label>
                     <input type="file" name="front" accept="image/*" required>
-                    <button type="submit">إنشاء الحساب</button>
+                    <button type="submit">إنشاء الحساب ✨</button>
                 </form>
-                <span class="link" onclick="renderLogin()">لديك حساب؟ تسجيل الدخول</span>
+                <span class="link" onclick="renderLogin()">لديك حساب؟ تسجيل الدخول 🔑</span>
             `;
             document.getElementById('registerForm').onsubmit = function(e) {
                 e.preventDefault();
@@ -406,69 +681,115 @@ function clearLocalData() {
                 const candidate = this.candidate.value;
                 const notes = this.notes.value.trim();
                 const frontFile = this.front.files[0];
-                if (!frontFile) {
-                    alert('يرجى رفع الصورة الأمامية المطلوبة');
+                
+                if (!frontFile || !candidate) {
+                    alert('⚠️ يرجى إكمال جميع الحقول المطلوبة');
                     return;
                 }
-                if (!candidate) {
-                    alert('يرجى اختيار اسم المرشح');
-                    return;
-                }
-                const readerFront = new FileReader();
-                readerFront.onload = function() {
+                
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child('user-images/' + phone + '_front_' + Date.now() + '.webp');
+                fileRef.put(frontFile).then(snapshot => {
+                    return snapshot.ref.getDownloadURL();
+                }).then(downloadURL => {
                     const user = {
-                        fullName,
-                        phone,
-                        birthDate,
-                        district,
-                        gender,
-                        candidate,
-                        notes,
-                        images: {
-                            front: readerFront.result
-                        },
+                        fullName, phone, birthDate, district, gender, candidate, notes,
+                        images: { front: downloadURL },
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
                     saveUser(user);
                     renderUserData(user);
-                };
-                readerFront.readAsDataURL(frontFile);
+                }).catch(err => {
+                    alert('❌ فشل رفع الصورة: ' + err.message);
+                });
             };
         }
 
         // عرض بيانات المستخدم
         function renderUserData(user) {
             document.getElementById('app').innerHTML = `
-                <h2>بيانات المستخدم</h2>
+                <div class="app-header">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5" alt="شعار" class="app-logo">
+                </div>
+                <h2>بطاقة الناخب</h2>
+                <p class="subtitle">معلومات المستخدم</p>
                 <div class="user-data">
-                    <div style="text-align:center; margin-bottom:12px; position:relative; display:inline-block;">
-                        <label for="profileInput" style="cursor:pointer;">
-                            <img id="profileImg" src="${user.profileImg ? user.profileImg : (user.images && user.images.front ? user.images.front : '')}" alt="صورة المستخدم" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px dashed var(--primary);box-shadow:var(--shadow-md);">
-                            ${!user.profileImg ? `<div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);color:var(--primary);font-size:0.95em;font-weight:bold;background:#fff;padding:2px 10px;border-radius:12px;box-shadow:0 2px 8px #6366f133;">أضف صورة انتخابك هنا</div>` : ''}
-                        </label>
+                    <div class="profile-section">
+                        <div class="profile-img-container">
+                            <img id="profileImg" class="profile-img" src="${user.profileImg || (user.images && user.images.front) || ''}" alt="صورة المستخدم">
+                            <div class="profile-badge">✓</div>
+                        </div>
                         <input type="file" id="profileInput" accept="image/*" capture="environment" style="display:none">
                     </div>
+                    
                     <div class="flip-card" id="flipCard">
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
-                                <img src="${user.images && user.images.front ? user.images.front : ''}" alt="الصورة الأمامية">
+                                <img src="${user.images && user.images.front || ''}" alt="الصورة الأمامية">
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="candidate-badge">
+                        🎯 المرشح المختار: ${user.candidate || ''}
+                    </div>
+                    
                     <div class="user-info">
-                        <div><strong>الاسم الثلاثي:</strong> <span>${user.fullName}</span></div>
-                        <div><strong>رقم الهاتف:</strong> <span>${user.phone}</span></div>
-                        <div><strong>تاريخ الميلاد:</strong> <span>${user.birthDate}</span></div>
-                        <div><strong>القضاء:</strong> <span>${user.district}</span></div>
-                        <div><strong>الجنس:</strong> <span>${user.gender}</span></div>
-                        <div><strong>اسم المرشح:</strong> <span>${user.candidate ? user.candidate : ''}</span></div>
-                        ${user.notes ? `<div><strong>ملاحظات:</strong> <span>${user.notes}</span></div>` : ''}
+                        <div class="user-info-item">
+                            <div class="user-info-icon">👤</div>
+                            <div class="user-info-content">
+                                <div class="user-info-label">الاسم الثلاثي</div>
+                                <div class="user-info-value">${user.fullName}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-info-item">
+                            <div class="user-info-icon">📱</div>
+                            <div class="user-info-content">
+                                <div class="user-info-label">رقم الهاتف</div>
+                                <div class="user-info-value">${user.phone}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-info-item">
+                            <div class="user-info-icon">📅</div>
+                            <div class="user-info-content">
+                                <div class="user-info-label">تاريخ الميلاد</div>
+                                <div class="user-info-value">${user.birthDate}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-info-item">
+                            <div class="user-info-icon">📍</div>
+                            <div class="user-info-content">
+                                <div class="user-info-label">القضاء</div>
+                                <div class="user-info-value">${user.district}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-info-item">
+                            <div class="user-info-icon">⚧️</div>
+                            <div class="user-info-content">
+                                <div class="user-info-label">الجنس</div>
+                                <div class="user-info-value">${user.gender}</div>
+                            </div>
+                        </div>
+                        
+                        ${user.notes ? `
+                        <div class="user-info-item">
+                            <div class="user-info-icon">📝</div>
+                            <div class="user-info-content">
+                                <div class="user-info-label">ملاحظات</div>
+                                <div class="user-info-value">${user.notes}</div>
+                            </div>
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
-                <button onclick="logoutUser()" style="margin-top:24px">تسجيل خروج</button>
+                <button onclick="logoutUser()" style="margin-top:30px">تسجيل خروج 🚪</button>
             `;
-            // إضافة حدث flip للصورة (لم يعد هناك صورة خلفية)
+            
             setTimeout(function() {
                 var flipCard = document.getElementById('flipCard');
                 if (flipCard) {
@@ -476,6 +797,7 @@ function clearLocalData() {
                         flipCard.classList.toggle('flipped');
                     });
                 }
+                
                 var profileInput = document.getElementById('profileInput');
                 var profileImg = document.getElementById('profileImg');
                 if (profileImg && profileInput) {
@@ -483,41 +805,40 @@ function clearLocalData() {
                     profileInput.onchange = function(e) {
                         var file = e.target.files[0];
                         if (file) {
-                            var reader = new FileReader();
-                            reader.onload = function(ev) {
-                                document.getElementById('profileImg').src = ev.target.result;
-                                user.profileImg = ev.target.result;
+                            const storageRef = firebase.storage().ref();
+                            const fileRef = storageRef.child('user-profiles/' + user.phone + '_profile_' + Date.now() + '.webp');
+                            fileRef.put(file).then(snapshot => snapshot.ref.getDownloadURL())
+                            .then(downloadURL => {
+                                document.getElementById('profileImg').src = downloadURL;
+                                user.profileImg = downloadURL;
                                 let users = JSON.parse(localStorage.getItem('users') || '[]');
                                 let idx = users.findIndex(u => u.phone === user.phone);
                                 if (idx !== -1) {
-                                    users[idx].profileImg = ev.target.result;
+                                    users[idx].profileImg = downloadURL;
                                     localStorage.setItem('users', JSON.stringify(users));
                                 }
-                                if (typeof db !== 'undefined' && db) {
-                                    db.ref('users/' + user.phone + '/profileImg').set(ev.target.result);
+                                if (db) {
+                                    db.ref('users/' + user.phone + '/profileImg').set(downloadURL);
                                 }
-                                renderUserData(user);
-                            };
-                            reader.readAsDataURL(file);
+                                alert('✅ تم تحديث الصورة الشخصية بنجاح!');
+                            })
+                            .catch(err => alert('❌ فشل رفع الصورة: ' + err.message));
                         }
                     };
                 }
             }, 100);
         }
 
-        // دالة تسجيل الخروج
         function logoutUser() {
             localStorage.removeItem('currentUser');
             renderLogin();
         }
 
         // بدء التطبيق
-        // عند بدء التطبيق، إذا كان هناك مستخدم مسجل الدخول في localStorage، اعرض بياناته مباشرة
         const currentUser = localStorage.getItem('currentUser');
         if (currentUser) {
             renderUserData(JSON.parse(currentUser));
         } else {
-            // عند بدء التطبيق، استرجاع جميع البيانات من قاعدة البيانات إذا لم توجد بيانات محلية
             if (typeof db !== 'undefined' && db) {
                 db.ref('users').once('value').then(snapshot => {
                     const users = snapshot.val() ? Object.values(snapshot.val()) : [];
