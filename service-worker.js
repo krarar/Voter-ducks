@@ -3,7 +3,7 @@ const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  'https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5',
+  'https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf',
   'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap',
   'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js',
   'https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js',
@@ -75,8 +75,8 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('push', function(event) {
   const options = {
     body: event.data ? event.data.text() : 'إشعار جديد من تطبيق الانتخابات',
-    icon: 'https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5',
-    badge: 'https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/Gemini_Generated_Image_4wnx844wnx844wnx.png?alt=media&token=a10c597c-9643-4169-93c0-40b30cedbed5',
+  icon: 'https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf',
+  badge: 'https://firebasestorage.googleapis.com/v0/b/messageemeapp.appspot.com/o/icon-192.png?alt=media&token=8d29fc43-51ea-45f3-a41a-10b8f2e0d9cf',
     vibrate: [200, 100, 200],
     tag: 'election-notification',
     requireInteraction: false
